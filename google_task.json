@@ -1,0 +1,367 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Google Tasks API",
+    "description": "API for managing tasks and task lists.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://tasks.googleapis.com/tasks/v1",
+      "description": "Google Tasks API server"
+    }
+  ],
+  "paths": {
+    "/lists/{tasklist}/tasks": {
+      "get": {
+        "operationId": "getAllTasksInTaskList",
+        "summary": "Retrieves all tasks in the specified task list.",
+        "parameters": [
+          {
+            "name": "tasklist",
+            "in": "path",
+            "required": true,
+            "description": "Task list identifier.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Tasks successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "description": "Type of the resource."
+                    },
+                    "etag": {
+                      "type": "string",
+                      "description": "ETag of the collection."
+                    },
+                    "nextPageToken": {
+                      "type": "string",
+                      "description": "Token for the next page of results."
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "description": "Type of the resource."
+                          },
+                          "id": {
+                            "type": "string",
+                            "description": "Task identifier."
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "Title of the task."
+                          },
+                          "updated": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Last modification time of the task."
+                          },
+                          "selfLink": {
+                            "type": "string",
+                            "description": "URL pointing to this task."
+                          },
+                          "parent": {
+                            "type": "string",
+                            "description": "Parent task identifier if this task is a subtask."
+                          },
+                          "position": {
+                            "type": "string",
+                            "description": "Task's position within the list."
+                          },
+                          "notes": {
+                            "type": "string",
+                            "description": "Notes for the task."
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": ["needsAction", "completed"],
+                            "description": "Status of the task."
+                          },
+                          "due": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Due date of the task."
+                          },
+                          "completed": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Completion date of the task."
+                          },
+                          "deleted": {
+                            "type": "boolean",
+                            "description": "Whether the task has been deleted."
+                          },
+                          "hidden": {
+                            "type": "boolean",
+                            "description": "Whether the task is hidden."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "addTaskToTaskList",
+        "summary": "Adds a new task to the specified task list.",
+        "parameters": [
+          {
+            "name": "tasklist",
+            "in": "path",
+            "required": true,
+            "description": "Task list identifier.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "Title of the task.",
+                    "example": "Buy groceries"
+                  },
+                  "notes": {
+                    "type": "string",
+                    "description": "Notes for the task.",
+                    "example": "Milk, Bread, Butter"
+                  },
+                  "due": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Due date of the task.",
+                    "example": "2023-07-15T00:00:00.000Z"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["needsAction", "completed"],
+                    "description": "Status of the task.",
+                    "example": "needsAction"
+                  }
+                },
+                "required": ["title"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Task successfully added.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "description": "Type of the resource.",
+                      "example": "tasks#task"
+                    },
+                    "id": {
+                      "type": "string",
+                      "description": "Task identifier.",
+                      "example": "taskID"
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "Title of the task.",
+                      "example": "Buy groceries"
+                    },
+                    "updated": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Last modification time of the task.",
+                      "example": "2023-07-10T00:00:00.000Z"
+                    },
+                    "selfLink": {
+                      "type": "string",
+                      "description": "URL pointing to this task.",
+                      "example": "https://tasks.googleapis.com/tasks/v1/lists/tasklistID/tasks/taskID"
+                    },
+                    "parent": {
+                      "type": "string",
+                      "description": "Parent task identifier if this task is a subtask.",
+                      "example": "parentTaskID"
+                    },
+                    "position": {
+                      "type": "string",
+                      "description": "Task's position within the list.",
+                      "example": "00000000000000000001"
+                    },
+                    "notes": {
+                      "type": "string",
+                      "description": "Notes for the task.",
+                      "example": "Milk, Bread, Butter"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": ["needsAction", "completed"],
+                      "description": "Status of the task.",
+                      "example": "needsAction"
+                    },
+                    "due": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Due date of the task.",
+                      "example": "2023-07-15T00:00:00.000Z"
+                    },
+                    "completed": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Completion date of the task.",
+                      "example": "2023-07-10T00:00:00.000Z"
+                    },
+                    "deleted": {
+                      "type": "boolean",
+                      "description": "Whether the task has been deleted.",
+                      "example": false
+                    },
+                    "hidden": {
+                      "type": "boolean",
+                      "description": "Whether the task is hidden.",
+                      "example": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/@me/lists": {
+      "get": {
+        "operationId": "getAllTaskLists",
+        "summary": "Retrieves all task lists for the authenticated user.",
+        "responses": {
+          "200": {
+            "description": "Task lists successfully retrieved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "description": "Type of the resource."
+                    },
+                    "etag": {
+                      "type": "string",
+                      "description": "ETag of the collection."
+                    },
+                    "nextPageToken": {
+                      "type": "string",
+                      "description": "Token for the next page of results."
+                    },
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "description": "Type of the resource."
+                          },
+                          "id": {
+                            "type": "string",
+                            "description": "Task list identifier."
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "Title of the task list."
+                          },
+                          "updated": {
+                            "type": "string",
+                            "format": "date-time",
+                            "description": "Last modification time of the task list."
+                          },
+                          "selfLink": {
+                            "type": "string",
+                            "description": "URL pointing to this task list."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/lists/{tasklist}/tasks/{task}/move": {
+      "post": {
+        "operationId": "moveTask",
+        "summary": "Moves the task to another position",
+        "description": "Moves the specified task to another position in the task list.",
+        "parameters": [
+          {
+            "name": "tasklist",
+            "in": "path",
+            "required": true,
+            "description": "Task list identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "task",
+            "in": "path",
+            "required": true,
+            "description": "Task identifier",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "previous",
+            "in": "query",
+            "required": false,
+            "description": "Previous task identifier. If not specified, the task is moved to the top of the list.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task moved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+  }
+}
