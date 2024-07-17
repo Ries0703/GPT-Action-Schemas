@@ -1,0 +1,334 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Gmail API",
+    "description": "OpenAPI schema for sending messages using the Gmail API.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://gmail.googleapis.com"
+    }
+  ],
+  "paths": {
+    "/gmail/v1/users/{userId}/profile": {
+      "get": {
+        "summary": "Get Profile",
+        "description": "Gets the profile of a user.",
+        "operationId": "getProfile",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the user. Use the special value 'me' to indicate the authenticated user."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Profile retrieved successfully",
+            "content": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "emailAddress": {
+                    "type": "string",
+                    "description": "The email address of the user"
+                  },
+                  "messagesTotal": {
+                    "type": "integer",
+                    "description": "The total number of messages in the user's mailbox"
+                  },
+                  "threadsTotal": {
+                    "type": "integer",
+                    "description": "The total number of threads in the user's mailbox"
+                  },
+                  "historyId": {
+                    "type": "string",
+                    "description": "The history ID of the user's mailbox"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/gmail/v1/users/{userId}/messages": {
+      "get": {
+        "summary": "List Messages",
+        "description": "Lists the messages of a user. The response is paginated. Use the nextPageToken to retrieve the next page of messages. Use the q parameter to filter messages by query.",
+        "operationId": "listMessages",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the user. Use the special value 'me' to indicate the authenticated user."
+          },
+          {
+            "name": "maxResults",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "description": "The maximum number of messages to return. Default is 100. Maximum is 100."
+          },
+          {
+            "name": "pageToken",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "The page token to retrieve the next page of messages."
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter messages by query using the Gmail query syntax. For example, 'from:amy' to find messages from Amy, or just a string to find by the message text."
+          },
+          {
+            "name": "labelIds",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Filter messages by label IDs. For example, 'INBOX' to find messages in the inbox."
+          },
+          {
+            "name": "includeSpamTrash",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Include messages from SPAM and TRASH in the results."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Message listed",
+            "content": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "nextPageToken": {
+                    "type": "string",
+                    "description": "Token to retrieve the next page of results in the list."
+                  },
+                  "resultSizeEstimate": {
+                    "type": "integer",
+                    "description": "Estimated total number of results."
+                  },
+                  "messages": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "threadId": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "description": "List of messages. Note that each message resource contains only an id and a threadId. Additional message details can be fetched using the messages.get method (path for it is /gmail/v1/users/{userId}/messages/{id})."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/gmail/v1/users/{userId}/messages/{id}": {
+      "get": {
+        "summary": "Get Message",
+        "description": "Gets the specified message(s) of a user.",
+        "operationId": "getMessage",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the user. Use the special value 'me' to indicate the authenticated user."
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the message to retrieve."
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "full",
+                "metadata",
+                "minimal",
+                "raw"
+              ]
+            },
+            "description": "The format of the message. Default is 'full'. Possible values are 'full', 'metadata', 'minimal', 'raw'."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Message retrieved successfully",
+            "content": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "The ID of the message"
+                  },
+                  "threadId": {
+                    "type": "string",
+                    "description": "The ID of the thread the message belongs to"
+                  },
+                  "labelIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "The labels of the message"
+                  },
+                  "snippet": {
+                    "type": "string",
+                    "description": "The snippet of the message"
+                  },
+                  "payload": {
+                    "type": "object",
+                    "properties": {
+                      "headers": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      },
+                      "body": {
+                        "type": "object",
+                        "properties": {
+                          "size": {
+                            "type": "integer",
+                            "description": "The size of the email body in bytes"
+                          },
+                          "data": {
+                            "type": "string",
+                            "format": "byte",
+                            "description": "The base64 encoded email content"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/gmail/v1/users/{userId}/messages/send": {
+      "post": {
+        "summary": "Send Message",
+        "description": "Sends the specified message to the recipients in the To, Cc, and Bcc headers. Can also used to reply/response to messages by adding 'threadId' key with its value in the request body",
+        "operationId": "sendMessage",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "id of the sender, use the special value 'me' to refer to the authenticated user"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "raw": {
+                    "type": "string",
+                    "description": "The base64 encoded email content"
+                  },
+                  "threadId": {
+                    "type": "string",
+                    "description": "The ID of the thread the message belongs to. Include this field when replying to a message."
+                  }
+                },
+                "required": [
+                  "raw"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Message sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "The ID of the sent message"
+                    },
+                    "threadId": {
+                      "type": "string",
+                      "description": "The ID of the thread the sent message belongs to"
+                    },
+                    "labelIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "The labels of the sent message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
