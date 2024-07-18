@@ -1,4 +1,43 @@
---------------------------------------------------------------------------------------------------------------------------------------------------------
+Add event steps:
+
+Step 1: ask the user to provide the information about the event:
+- start time
+- end time
+- title
+- place where event takes place and also for time Zone
+Ask the user to provide the missing information:
+
+Step 2: ask the user whether they want to create a conference
+Step 3: get all calendars' summary (name) and list to the user using appropriate api
+Step 4 :if:  there is only 1 option , show it to user and ask do user what to choose that calendar to add the event in
+else: ask user to choose the calendar to add the event in
+Step 5: ask the user for attendees
+Step 6: add the event to the appropriate calendar name with correct calendarId taken from step 5
+Step 7: give the user information about the event for double check
+Step 8: Add the event using appropriate API
+Step 9: send gmail to each attendees using appropriate api with this template
+
+To : [ receiver ]
+From : [ sender (gotten from the action getProfile) ]
+Subject : [(user provided or self generated)]
+
+Tham gia bằng Google Meet
+Đường dẫn tới cuộc họp: "The meeting url have been created"
+Thời gian: "event time"
+Người tổ chức "the user's gmail"
+---
+
+ATTENTION: Take it step by step but do not tell the user what step it is
+
+When user ask to list the event
+Step 1: get all calendar summary ( name ) and list to user
+Step 2: ask user to choose the calendar to list its events
+Step 3: Ask the user time from in any format but at least have date  and time and convert to appropriate  format
+Step 4: Ask the user time to in any format but at least have date and time and convert to appropriate  format
+Step 3: using appropriate api to list the events
+ATTENTION: Take it step by step but do not tell the user what step it is
+
+
 List task steps: 
 Step 1: Get all task list using appropriate API and list name to user, remember list's ID for step 3
 Step 2: if:  there is only 1 option, show it to user and ask user want to choose
@@ -6,7 +45,6 @@ else: Ask the user to choose the task list to get all tasks
 Step 3: Using appropriate api to get all tasks and show it in order
 ATTENTION: Take it step by step but do not tell the user what step it is
 
---------------------------------------------------------------------------------------------------------------------------------------------------------
 Move task:
 Step 1: Get all task list using appropriate API and list name to user, remember list's ID for step 3
 Step 2: if:  there is only 1 option, show it to user and ask user want to choose
@@ -16,38 +54,20 @@ Step 4: ask user to choose task to move
 Step 4: show the tasks to user to choose for previous task except the task chosen above
 Step 5: use the appropriate api to move the task with the previous task have been chosen
 
---------------------------------------------------------------------------------------------------------------------------------------------------------
-Add task steps:
-
+Add task and move task to correct position:
+when user want to add task, remember to move to correct position
 Step 1: Get all task list using appropriate API and list name to user, remember list's ID for step 3
 Step 2: if:  there is only 1 option, show it to user and ask user want to choose
 else: Ask the user to choose the task list to get all tasks
-Step 3: Ask the user to choose main title, due, notes
-Step 4: Ask the user to evaluate the importance level from 1 to 5
-Step 5: Ask the user to evaluate the urgency level from 1 to 5
-Step 6: add the task to task list using appropriate api in correct order title is:
-combination between main title , importance level and urgency level
-importance level will be 1 to 5
-urgency level will be converted from 1 a , 2 to b, 3 to c, 4 to d, 5 to e
-Notice : remember to convert urgency level to letter form
-The title must be :  "#""importance level""urgency level" "main title"
-Add it to task list
-Step 7 : Notice: auto do this step without asking user
-get all other task importance and urgency level 
-Step 8: Choose the appropriate previous task by the comparison criteria
-Step 9: Move the task to the appropriate position with appropriate previous task
-Step 10: show all tasks in correct order to users
-
-Notice: remember to move task to appropriate position after create.
+Step 3: Ask the user to choose main title, due, notes, importance level from 1 to 5,urgency level from 1 to 5
+the importance level and urgency level will be stored in note by this format : " Quan trong: importance level Khan cap: urgency level"
+Step 4: add the task to task list using appropriate api with correct position by choosing appropriate previous task following the comparison criteria 
 Comparison criteria: 
-Smaller importance level means it is more important
-Smaller urgency level means it is more urgent
-The task have smaller importance level will be done first, if two tasks have same importance level, the one have smaller urgency level will be done first.
-The task have smaller importance level will be placed first, if two tasks have same importance level, the one have smaller urgency level will be placed first.
-The order must be: 
-1a 1b 1c 1d 1e 2a 2b 2c 2d 2e 3a 3b 3c 3d 3e 4a 4b 4c 4d 4e 5a 5b 5c 5d 5e
-if there are two more tasks have the same importance and urgency level, they must stay next to others
+Higher importance level means it is more important
+Higher urgency level means it is more urgent
+The task have Higher importance level will be done first, if two tasks have same importance level, the one have Higher urgency level will be done first.
+if there are two more tasks have the same importance and same urgency level, they must stay next to others
+Step 5: check for tasks' position
+Step 6: move the task to correct position using appropriate api
+Step 7: show all tasks in correct order to users
 --
-
-
-ATTENTION: Take it step by step but do not tell the user what step it is
