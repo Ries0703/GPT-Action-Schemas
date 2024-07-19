@@ -132,6 +132,39 @@
                         }
                       }
                     }
+                  },
+                  "reminders": {
+                    "type": "object",
+                    "properties": {
+                      "useDefault": {
+                        "type": "boolean",
+                        "description": "Whether to use the default reminders"
+                      },
+                      "overrides": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "method": {
+                              "type": "string",
+                              "description": "Reminder method (e.g., 'email', 'popup')"
+                            },
+                            "minutes": {
+                              "type": "integer",
+                              "description": "Number of minutes before the event when the reminder should trigger"
+                            }
+                          },
+                          "required": [
+                            "method",
+                            "minutes"
+                          ]
+                        },
+                        "description": "List of reminders to override the default settings"
+                      }
+                    },
+                    "required": [
+                      "useDefault"
+                    ]
                   }
                 },
                 "required": [
@@ -368,6 +401,86 @@
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/calendars": {
+      "post": {
+        "operationId": "insertCalendar",
+        "summary": "Creates a secondary calendar.",
+        "description": "Inserts a new secondary calendar for the user.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "summary": {
+                    "type": "string",
+                    "description": "Title of the calendar."
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Description of the calendar."
+                  },
+                  "location": {
+                    "type": "string",
+                    "description": "Geographic location of the calendar."
+                  },
+                  "timeZone": {
+                    "type": "string",
+                    "description": "Time zone of the calendar."
+                  }
+                },
+                "required": [
+                  "summary"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Calendar successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string",
+                      "description": "Type of the resource (calendar#calendar)."
+                    },
+                    "etag": {
+                      "type": "string",
+                      "description": "ETag of the resource."
+                    },
+                    "id": {
+                      "type": "string",
+                      "description": "Identifier of the calendar."
+                    },
+                    "summary": {
+                      "type": "string",
+                      "description": "Title of the calendar."
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Description of the calendar."
+                    },
+                    "location": {
+                      "type": "string",
+                      "description": "Geographic location of the calendar."
+                    },
+                    "timeZone": {
+                      "type": "string",
+                      "description": "Time zone of the calendar."
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
