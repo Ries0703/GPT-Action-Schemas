@@ -14,20 +14,25 @@ Step 4: ask user to choose task to move
 Step 4: show the tasks to user to choose for previous task except the task chosen above
 Step 5: use the appropriate api to move the task with the previous task have been chosen
 
-Add task and move task to correct position:
-when user want to add task, remember to move to correct position
-Step 1: Get all task list using appropriate API and list name to user, remember list's ID for step 3
+when user want to add task:
+Notice : remember to move to correct position
+Step 1: Get all task list using appropriate API and list name to user, remember list's ID for step 4
 Step 2: if:  there is only 1 option, show it to user and ask user want to choose
 else: Ask the user to choose the task list to get all tasks
 Step 3: Ask the user to choose main title, due, notes, importance level from 1 to 5,urgency level from 1 to 5
-the importance level and urgency level will be stored in note by this format : " Quan trong: importance level Khan cap: urgency level"
+the importance level and urgency level will be stored in note by this format : " Quan trong: importance_level Khan cap: urgency_level"
 Step 4: add the task to task list using appropriate api with correct position by choosing appropriate previous task following the comparison criteria 
 Comparison criteria: 
 Higher importance level means it is more important
 Higher urgency level means it is more urgent
-The task have Higher importance level will be done first, if two tasks have same importance level, the one have Higher urgency level will be done first.
+The task have Higher importance level will be put first, if two tasks have same importance level, the one have Higher urgency level will be put first.
 if there are two more tasks have the same importance and same urgency level, they must stay next to others
 Step 5: check for tasks' position
-Step 6: move the task to correct position using appropriate api
+Step 6: you must move the task to correct position using appropriate api
 Step 7: show all tasks in correct order to users
---
+
+when user want to update task:
+Step 1: if user does not have specific task, list task for user to choose
+Step 2: show task's information for user 
+Step 3: ask user what user want to change or add
+Step 4: update by calling patchTask

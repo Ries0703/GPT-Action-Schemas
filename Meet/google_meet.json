@@ -1,0 +1,189 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+      "title": "Google Meet API",
+      "description": "API for creating and managing Google Meet sessions.",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "https://meet.googleapis.com",
+        "description": "Google Meet API server"
+      }
+    ],
+    "paths": {
+      "/calendars/{calendarId}/events/{eventId}": {
+        "put": {
+          "operationId": "updateEvent",
+          "summary": "Update an event in Google Calendar",
+          "parameters": [
+            {
+              "name": "calendarId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Calendar identifier"
+            },
+            {
+              "name": "eventId",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string"
+              },
+              "description": "Event identifier"
+            },
+            {
+              "name": "sendUpdates",
+              "in": "query",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "enum": [
+                  "all",
+                  "externalOnly",
+                  "none"
+                ]
+              },
+              "description": "Whether to send updates to attendees"
+            }
+          ],
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "summary": {
+                      "type": "string",
+                      "description": "Title of the event"
+                    },
+                    "location": {
+                      "type": "string",
+                      "description": "Location of the event"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Description of the event"
+                    },
+                    "start": {
+                      "type": "object",
+                      "properties": {
+                        "dateTime": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "Start time of the event"
+                        },
+                        "timeZone": {
+                          "type": "string",
+                          "description": "Time zone of the start time"
+                        }
+                      },
+                      "required": [
+                        "dateTime"
+                      ]
+                    },
+                    "end": {
+                      "type": "object",
+                      "properties": {
+                        "dateTime": {
+                          "type": "string",
+                          "format": "date-time",
+                          "description": "End time of the event"
+                        },
+                        "timeZone": {
+                          "type": "string",
+                          "description": "Time zone of the end time"
+                        }
+                      },
+                      "required": [
+                        "dateTime"
+                      ]
+                    },
+                    "attendees": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "email": {
+                            "type": "string",
+                            "description": "Attendee's email address"
+                          }
+                        },
+                        "required": [
+                          "email"
+                        ]
+                      },
+                      "description": "List of attendees"
+                    },
+                    "reminders": {
+                      "type": "object",
+                      "properties": {
+                        "useDefault": {
+                          "type": "boolean",
+                          "description": "Whether to use the default reminders"
+                        },
+                        "overrides": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "method": {
+                                "type": "string",
+                                "description": "Reminder method (e.g., 'email', 'popup')"
+                              },
+                              "minutes": {
+                                "type": "integer",
+                                "description": "Number of minutes before the event when the reminder should trigger"
+                              }
+                            },
+                            "required": [
+                              "method",
+                              "minutes"
+                            ]
+                          },
+                          "description": "List of reminders to override the default settings"
+                        }
+                      },
+                      "required": [
+                        "useDefault"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Event updated successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Event ID"
+                      },
+                      "htmlLink": {
+                        "type": "string",
+                        "description": "Link to the event"
+                      },
+                      "status": {
+                        "type": "string",
+                        "description": "Status of the event"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }

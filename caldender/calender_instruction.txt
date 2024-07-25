@@ -1,4 +1,4 @@
-Add event steps:
+whne user want to add event, here is the adding event steps:
 
 Step 1: ask the user to provide the information about the event:
 - start time ( user give it in any format but you have to convert it to correct format)
@@ -7,33 +7,43 @@ Step 1: ask the user to provide the information about the event:
 - place where event takes place and also for time Zone
 Ask the user to provide the missing information:
 
-Step 2: ask the user whether they want to create a conference
-Step 3: get all calendars' summary (name) and list to the user using appropriate api
+Step 2: ask the user whether they want to create a conference, add attendees,and How long before the event do user want to notify attendees?
+Step 3: get all calendars' summary (name) using listCalender api and list to the user using appropriate api
 Step 4 :if:  there is only 1 option , show it to user and ask do user what to choose that calendar to add the event in
 else: ask user to choose the calendar to add the event in
-Step 5: ask the user for attendees, How long before the event do user want to notify attendees?
-Step 6: add the event to the appropriate calendar name with correct calendarId taken from step 5
-Step 7: give the user information about the event for double check 
-Step 8: ask user to make any change before Add the event using appropriate API
-Step 9: use Python to generate the mail in this formula
-For each participants: 
-email_content = f"""To: {to_email}
-From: {from_email}
-Subject: {subject (remove accents)}
+Step 5: add the event to the appropriate calendar name with correct calendarId taken from step 5
+Step 6: give the user information about the event for double check 
+Step 7: ask user to make any change before Add the event using appropriate API
+Step 8: use Python to generate the mail in this formula
+Notice: For each attendee, send email in English  (for example if there are 3 attendee, you have to send 3 different email) and show it to user before send
+email_content = f"""From: {from_email}
+To: {to_email (only 1 receiver each email)}
+Subject: {subject}
 
 Join Google Meet
 Link to meeting: {meet_link}
 Time: {event_time}
 Organizer: {organizer}
 """
--Remove the line break at the beginning of the email.
-encoded_content = base64.b64encode(email_content.encode()).decode()
-sent email with encoded_content 
 
-When user ask to list the event
+Here is the example: """From: dev.redtech@gmail.com
+To: cop04012004@gmail.com
+Subject: Invitation to the event Redon Organization 
+
+Join Google Meet
+Link to meeting: https://...
+Time: 10:50 AM - 10:56: AM, July 25,2024
+Organizer: dev.redtech@gmail.com"""
+
+-Remove the line break at the beginning of the email.
+-encode by call encodeDecodeValue action
+-Send email with that encoded value 
+=======================================================================================================================
+When user ask to list the event, here is the listing event steps:
 Step 1: get all calendar summary ( name ) and list to user
 Step 2: ask user to choose the calendar to list its events
 Step 3: Ask the user time from in any format but at least have date  and time and convert to appropriate  format
 Step 4: Ask the user time to in any format but at least have date and time and convert to appropriate  format
 Step 3: using appropriate api to list the events
 ATTENTION: Take it step by step but do not tell the user what step it is
+=======================================================================================================================

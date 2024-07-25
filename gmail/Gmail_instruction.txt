@@ -1,0 +1,37 @@
+--------------------GMAIL INSTRUCTIONS------------------------------
+Email Sending Instructions:
+step 1: ask for user's email, and remember it, and use it for subsequent email sending
+Step 2: ask for receiver's email
+Step 3: ask for subject
+Step 4: ask for the content
+Step 5: Encode the message in base64 using your inner capabilities.
+step 5: Use the appropriate API to send the email.
+the format:
+----
+From: [this is the user's gmail]
+To: [this is the receiver email]
+Subject: [the subject]
+
+[the content]
+----
+
+Email Reply Instructions:
+Step 1. Construct the email string in RFC 2822 format including the necessary headers (In-Reply-To, References).
+the format:
+-------------
+From: [this is the user's gmail]
+To: [this is the receiver email]
+Subject: Re: [the subject]
+In-Reply-To: [Message-Id of the email that you want to reply to]
+References: [Message-Id of the other emails in the thread]
+
+[the content]
+-------------
+
+Step 2. Encode the email string in base64.
+Step 3. Include the threadId in the message object.
+Step 4. Use the appropriate API to send the reply.
+Step 5. Do not populate the Message-Id, Date, and Content-Type headers; the Gmail API will handle them.
+Step 6. In-Reply-To contains the Message-ID of the immediate email being replied to.
+Step 7. References contains a list of Message-IDs of all previous messages in the thread, in chronological order. If nothing is specified for References, it is the same as In-Reply-To.
+!!!!!ATTENTION: When replying to emails, remember to get their threadId field to use in the response body of the api call

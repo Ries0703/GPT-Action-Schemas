@@ -1,0 +1,3 @@
+https://chat.openai.com/aip/g-58f47bffcfbc42c2d8de1a953c4e46bbe8bbc09a/oauth/callback
+https://chat.openai.com/aip/g-f60822e82cdc578cea705930876d372294d1d7d4/oauth/callback
+https://chat.openai.com/aip/g-734f0c0ef293276db02d31021055f58427eec84d/oauth/callback
