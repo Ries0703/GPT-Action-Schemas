@@ -1010,10 +1010,6 @@
       "Info": {
         "description": "The general information for a form.",
         "properties": {
-          "description": {
-            "description": "The description of the form. Only update this field using batchUpdate",
-            "type": "string"
-          },
           "documentTitle": {
             "description": "Output only. The title of the document which is visible in Drive. If `Info.title` is empty, `document_title` may appear in its place in the Google Forms UI and be visible to responders. `document_title` can be set on create, but cannot be modified by a batchUpdate request. Please use the [Google Drive API](https://developers.google.com/drive/api/v3/reference/files/update) if you need to programmatically update `document_title`.",
             "readOnly": true,
