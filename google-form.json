@@ -1,804 +1,1554 @@
 {
   "openapi": "3.1.0",
-  "info": {
-    "title": "Google Calendar API and Google Drive API",
-    "description": "API for managing Google Calendar events and APIs for Google Drive API.",
-    "version": "1.0.0"
-  },
   "servers": [
     {
-      "url": "https://www.googleapis.com"
+      "url": "https://forms.googleapis.com/"
     }
   ],
+  "info": {
+    "description": "Reads and writes Google Forms and responses.",
+    "version": "v1",
+    "title": "googleforms api"
+  },
   "paths": {
-    "/drive/v3/files/{fileId}": {
-      "patch": {
-        "summary": "Update a file's metadata and/or content",
-        "operationId": "updateFile",
-        "parameters": [
-          {
-            "name": "fileId",
-            "in": "path",
-            "description": "The ID of the file.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "addParents",
-            "in": "query",
-            "required": false,
-            "description": "A comma-separated list of parent IDs to add.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "keepRevisionForever",
-            "in": "query",
-            "required": false,
-            "description": "Whether to set the 'keepForever' field in the new head revision.",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
-            "name": "ocrLanguage",
-            "in": "query",
-            "required": false,
-            "description": "A language hint for OCR processing during image import (ISO 639-1 code).",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "removeParents",
-            "in": "query",
-            "required": false,
-            "description": "A comma-separated list of parent IDs to remove.",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "supportsAllDrives",
-            "in": "query",
-            "required": false,
-            "description": "Whether the requesting application supports both My Drives and shared drives.",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
-            "name": "useContentAsIndexableText",
-            "in": "query",
-            "required": false,
-            "description": "Whether to use the uploaded content as indexable text.",
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          }
-        ],
+    "/v1/forms": {
+      "post": {
+        "description": "Create a new form using the provided form message title. In the request body, only use title and documentTitle, all other fields should not be in the request body.",
+        "operationId": "createForm",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "The name of the file."
-                  },
-                  "description": {
-                    "type": "string",
-                    "description": "The description of the file."
-                  },
-                  "mimeType": {
-                    "type": "string",
-                    "description": "The MIME type of the file."
-                  },
-                  "parents": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "A list of parent IDs to which the file belongs."
-                  }
-                }
+                "$ref": "#/components/schemas/Form"
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Successful file update",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "description": "The ID of the updated file"
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "The name of the updated file"
-                    },
-                    "mimeType": {
-                      "type": "string",
-                      "description": "The MIME type of the updated file"
-                    }
-                  }
+                  "$ref": "#/components/schemas/Form"
                 }
               }
-            }
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "401": {
-            "description": "Authorization error"
+            },
+            "description": "Successful response"
           }
-        }
-      },
-      "delete": {
-        "summary": "Deletes a file.",
-        "operationId": "deleteFile",
-        "parameters": [
+        },
+        "security": [
           {
-            "name": "fileId",
-            "in": "path",
-            "description": "ID of the file to delete.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
+            "Oauth2": ["https://www.googleapis.com/auth/drive"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive.file"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/forms.body"]
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Successful file deletion"
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "401": {
-            "description": "Authorization error"
-          },
-          "404": {
-            "description": "File not found"
-          }
-        }
+        "tags": ["forms"]
       }
     },
-    "/drive/v3/files": {
-      "post": {
-        "summary": "Creates a new folder",
-        "operationId": "createFolder",
+    "/v1/forms/{formId}": {
+      "get": {
+        "description": "Get a form.",
+        "operationId": "getForms",
         "parameters": [
           {
-            "name": "access_token",
-            "in": "query",
-            "description": "OAuth access token.",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "uploadType",
-            "in": "query",
-            "description": "Legacy upload protocol for media (e.g. 'media', 'multipart').",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "alt",
-            "in": "query",
-            "description": "Data format for response.",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "json",
-                "media",
-                "proto"
-              ],
-              "default": "json"
-            }
-          },
-          {
-            "name": "fields",
-            "in": "query",
-            "description": "Selector specifying which fields to include in a partial response.",
-            "required": false,
+            "description": "Required. The form ID.",
+            "in": "path",
+            "name": "formId",
+            "required": true,
             "schema": {
               "type": "string"
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "Name of the folder"
-                  },
-                  "mimeType": {
-                    "type": "string",
-                    "description": "The MIME type of the folder, should be 'application/vnd.google-apps.folder'",
-                    "example": "application/vnd.google-apps.folder"
-                  }
-                },
-                "required": [
-                  "name",
-                  "mimeType"
-                ]
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
-            "description": "Successful folder creation",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "description": "The ID of the created folder"
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "The name of the created folder"
-                    }
-                  }
+                  "$ref": "#/components/schemas/Form"
                 }
               }
-            }
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "401": {
-            "description": "Authorization error"
+            },
+            "description": "Successful response"
           }
-        }
-      },
+        },
+        "security": [
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive.file"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive.readonly"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/forms.body"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/forms.body.readonly"]
+          }
+        ],
+        "tags": ["forms"]
+      }
+    },
+    "/v1/forms/{formId}/responses": {
       "get": {
-        "summary": "Lists or searches files and folders",
-        "operationId": "listFiles",
+        "description": "List a form's responses.",
+        "operationId": "listResponses",
         "parameters": [
           {
-            "name": "access_token",
-            "in": "query",
-            "description": "OAuth access token.",
-            "required": false,
+            "description": "Required. ID of the Form whose responses to list.",
+            "in": "path",
+            "name": "formId",
+            "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "q",
+            "description": "Which form responses to return. Currently, the only supported filters are: * timestamp > *N* which means to get all form responses submitted after (but not at) timestamp *N*. * timestamp >= *N* which means to get all form responses submitted at and after timestamp *N*. For both supported filters, timestamp must be formatted in RFC3339 UTC \"Zulu\" format. Examples: \"2014-10-02T15:01:23Z\" and \"2014-10-02T15:01:23.045123456Z\".",
             "in": "query",
-            "description": "A query for filtering the file results. See the \"Search for files & folders\" guide for supported syntax.",
-            "required": false,
+            "name": "filter",
             "schema": {
               "type": "string"
             }
           },
           {
+            "description": "The maximum number of responses to return. The service may return fewer than this value. If unspecified or zero, at most 5000 responses are returned.",
+            "in": "query",
             "name": "pageSize",
-            "in": "query",
-            "description": "The maximum number of files to return per page. Partial or empty result pages are possible even before the end of the files list has been reached.",
-            "required": false,
             "schema": {
-              "type": "integer",
-              "default": 100,
-              "minimum": 1,
-              "maximum": 1000
+              "type": "integer"
             }
           },
           {
+            "description": "A page token returned by a previous list response. If this field is set, the form and the values of the filter must be the same as for the original request.",
+            "in": "query",
             "name": "pageToken",
-            "in": "query",
-            "description": "The token for continuing a previous list request on the next page. This should be set to the value of 'nextPageToken' from the previous response.",
-            "required": false,
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "fields",
-            "in": "query",
-            "description": "Selector specifying which fields to include in a partial response.",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "spaces",
-            "in": "query",
-            "description": "A comma-separated list of spaces to query within the corpora. Supported values are 'drive' and 'appDataFolder'.",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "default": "drive"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful file listing",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "kind": {
-                      "type": "string",
-                      "description": "Identifies what kind of resource this is. Value: the fixed string 'drive#fileList'."
-                    },
-                    "nextPageToken": {
-                      "type": "string",
-                      "description": "The page token for the next page of files. This will be absent if the end of the files list has been reached."
-                    },
-                    "incompleteSearch": {
-                      "type": "boolean",
-                      "description": "Whether the search process was incomplete. If true, then some search results may be missing, since all documents were not searched. This may occur when searching multiple drives with the 'allDrives' corpora, but all corpora could not be searched. When this happens, the search response will include an 'incompleteSearch' boolean field with the value 'true'."
-                    },
-                    "files": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "description": "The ID of the file."
-                          },
-                          "name": {
-                            "type": "string",
-                            "description": "The name of the file."
-                          },
-                          "mimeType": {
-                            "type": "string",
-                            "description": "The MIME type of the file."
-                          }
-                        }
-                      },
-                      "description": "The list of files."
-                    }
-                  }
+                  "$ref": "#/components/schemas/ListFormResponsesResponse"
                 }
               }
-            }
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "401": {
-            "description": "Authorization error"
+            },
+            "description": "Successful response"
           }
-        }
+        },
+        "security": [
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive.file"]
+          },
+          {
+            "Oauth2": [
+              "https://www.googleapis.com/auth/forms.responses.readonly"
+            ]
+          }
+        ],
+        "tags": ["forms"]
       }
     },
-    "/drive/v3/files/{fileId}/copy": {
-      "post": {
-        "summary": "Creates a copy of a file",
-        "operationId": "copyFile",
+    "/v1/forms/{formId}/responses/{responseId}": {
+      "get": {
+        "description": "Get one response from the form.",
+        "operationId": "getResponses",
         "parameters": [
           {
-            "name": "fileId",
+            "description": "Required. The form ID.",
             "in": "path",
-            "description": "The ID of the file.",
+            "name": "formId",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "access_token",
-            "in": "query",
-            "description": "OAuth access token.",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "enforceSingleParent",
-            "in": "query",
-            "description": "Deprecated. Copying files into multiple folders is no longer supported. Use shortcuts instead.",
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
-            "name": "ignoreDefaultVisibility",
-            "in": "query",
-            "description": "Whether to ignore the domain's default visibility settings for the created file. Domain administrators can choose to make all uploaded files visible to the domain by default; this parameter bypasses that behavior for the request. Permissions are still inherited from parent folders.",
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
-            "name": "keepRevisionForever",
-            "in": "query",
-            "description": "Whether to set the 'keepForever' field in the new head revision. This is only applicable to files with binary content in Google Drive. Only 200 revisions for the file can be kept forever. If the limit is reached, try deleting pinned revisions.",
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
-            "name": "ocrLanguage",
-            "in": "query",
-            "description": "A language hint for OCR processing during image import (ISO 639-1 code).",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "supportsAllDrives",
-            "in": "query",
-            "description": "Whether the requesting application supports both My Drives and shared drives.",
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
-            "name": "supportsTeamDrives",
-            "in": "query",
-            "description": "Deprecated: Use `supportsAllDrives` instead.",
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "default": false
-            }
-          },
-          {
-            "name": "includePermissionsForView",
-            "in": "query",
-            "description": "Specifies which additional view's permissions to include in the response. Only 'published' is supported.",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "includeLabels",
-            "in": "query",
-            "description": "A comma-separated list of IDs of labels to include in the `labelInfo` part of the response.",
-            "required": false,
+            "description": "Required. The response ID within the form.",
+            "in": "path",
+            "name": "responseId",
+            "required": true,
             "schema": {
               "type": "string"
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "The name of the copied file."
-                  },
-                  "parents": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "The ID of the folder to copy the file into."
-                  }
-                }
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
-            "description": "Successful file copy",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "description": "The ID of the copied file"
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "The name of the copied file"
-                    }
-                  }
+                  "$ref": "#/components/schemas/FormResponse"
                 }
               }
-            }
-          },
-          "400": {
-            "description": "Bad request"
-          },
-          "401": {
-            "description": "Authorization error"
+            },
+            "description": "Successful response"
           }
-        }
+        },
+        "security": [
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive.file"]
+          },
+          {
+            "Oauth2": [
+              "https://www.googleapis.com/auth/forms.responses.readonly"
+            ]
+          }
+        ],
+        "tags": ["forms"]
       }
     },
-    "/calendar/v3/calendars/{calendarId}/events": {
-      "post": {
-        "operationId": "insertEvent",
-        "summary": "Creates an event in a specified calendar.",
+    "/v1/forms/{formId}/watches": {
+      "get": {
+        "description": "Return a list of the watches owned by the invoking project. The maximum number of watches is two: For each invoker, the limit is one for each event type per form.",
+        "operationId": "listWatches",
         "parameters": [
           {
-            "name": "calendarId",
+            "description": "Required. ID of the Form whose watches to list.",
             "in": "path",
+            "name": "formId",
             "required": true,
-            "description": "The calendar identifier.",
             "schema": {
               "type": "string"
             }
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "start": {
-                    "type": "object",
-                    "properties": {
-                      "dateTime": {
-                        "type": "string",
-                        "format": "date-time",
-                        "description": "Start date and time of the event."
-                      },
-                      "timeZone": {
-                        "type": "string",
-                        "description": "Timezone of the start time."
-                      }
-                    },
-                    "required": [
-                      "dateTime",
-                      "timeZone"
-                    ]
-                  },
-                  "end": {
-                    "type": "object",
-                    "properties": {
-                      "dateTime": {
-                        "type": "string",
-                        "format": "date-time",
-                        "description": "End date and time of the event."
-                      },
-                      "timeZone": {
-                        "type": "string",
-                        "description": "Timezone of the end time."
-                      }
-                    },
-                    "required": [
-                      "dateTime",
-                      "timeZone"
-                    ]
-                  },
-                  "summary": {
-                    "type": "string",
-                    "description": "Title of the event."
-                  },
-                  "location": {
-                    "type": "string",
-                    "description": "Location of the event."
-                  }
-                },
-                "required": [
-                  "start",
-                  "end"
-                ]
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
-            "description": "Event created successfully.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string",
-                      "description": "Event identifier."
-                    },
-                    "status": {
-                      "type": "string",
-                      "description": "Status of the event."
-                    },
-                    "htmlLink": {
-                      "type": "string",
-                      "description": "Link to the event in Google Calendar."
-                    }
-                  }
+                  "$ref": "#/components/schemas/ListWatchesResponse"
                 }
               }
-            }
-          },
-          "400": {
-            "description": "Invalid request."
-          },
-          "401": {
-            "description": "Unauthorized access."
-          },
-          "403": {
-            "description": "Forbidden access."
-          },
-          "404": {
-            "description": "Calendar not found."
-          },
-          "500": {
-            "description": "Internal server error."
+            },
+            "description": "Successful response"
           }
-        }
+        },
+        "security": [
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive.file"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive.readonly"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/forms.body"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/forms.body.readonly"]
+          },
+          {
+            "Oauth2": [
+              "https://www.googleapis.com/auth/forms.responses.readonly"
+            ]
+          }
+        ],
+        "tags": ["forms"]
       },
-      "get": {
-        "operationId": "listEvents",
-        "summary": "List all events in a time period",
-        "description": "Retrieves a list of events within a specified time period for a calendar.",
+      "post": {
+        "description": "Create a new watch. If a watch ID is provided, it must be unused. For each invoking project, the per form limit is one watch per Watch.EventType. A watch expires seven days after it is created (see Watch.expire_time).",
+        "operationId": "createWatches",
         "parameters": [
           {
-            "name": "calendarId",
+            "description": "Required. ID of the Form to watch.",
             "in": "path",
+            "name": "formId",
             "required": true,
-            "description": "The calendar identifier.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWatchRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Watch"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive.file"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive.readonly"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/forms.body"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/forms.body.readonly"]
+          },
+          {
+            "Oauth2": [
+              "https://www.googleapis.com/auth/forms.responses.readonly"
+            ]
+          }
+        ],
+        "tags": ["forms"]
+      }
+    },
+    "/v1/forms/{formId}/watches/{watchId}": {
+      "delete": {
+        "description": "Delete a watch.",
+        "operationId": "deleteWatches",
+        "parameters": [
+          {
+            "description": "Required. The ID of the Form.",
+            "in": "path",
+            "name": "formId",
+            "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "timeMin",
-            "in": "query",
+            "description": "Required. The ID of the Watch to delete.",
+            "in": "path",
+            "name": "watchId",
             "required": true,
-            "description": "Lower bound (inclusive) of the event's start time.",
             "schema": {
-              "type": "string",
-              "format": "date-time"
-            }
-          },
-          {
-            "name": "timeMax",
-            "in": "query",
-            "required": true,
-            "description": "Upper bound (exclusive) of the event's end time.",
-            "schema": {
-              "type": "string",
-              "format": "date-time"
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "A list of events",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "items": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string"
-                          },
-                          "summary": {
-                            "type": "string"
-                          },
-                          "start": {
-                            "type": "object",
-                            "properties": {
-                              "dateTime": {
-                                "type": "string",
-                                "format": "date-time"
-                              }
-                            }
-                          },
-                          "end": {
-                            "type": "object",
-                            "properties": {
-                              "dateTime": {
-                                "type": "string",
-                                "format": "date-time"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/Empty"
                 }
               }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
+            },
+            "description": "Successful response"
           }
-        }
+        },
+        "security": [
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive.file"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive.readonly"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/forms.body"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/forms.body.readonly"]
+          },
+          {
+            "Oauth2": [
+              "https://www.googleapis.com/auth/forms.responses.readonly"
+            ]
+          }
+        ],
+        "tags": ["forms"]
       }
     },
-    "/calendar/v3/users/me/calendarList": {
-      "get": {
-        "operationId": "listCalendar",
-        "summary": "List all calendar names and IDs",
-        "description": "Retrieves a list of calendars for the authenticated user.",
+    "/v1/forms/{formId}/watches/{watchId}:renew": {
+      "post": {
+        "description": "Renew a watch for seven days, setting its state to ACTIVE and extending expire_time. If the watch is SUSPENDED, renewal succeeds if errors are resolved; otherwise, it fails. If expired, returns NOT_FOUND.",
+        "operationId": "renew",
+        "parameters": [
+          {
+            "description": "Required. The ID of the Form.",
+            "in": "path",
+            "name": "formId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "description": "Required. The ID of the Watch to renew.",
+            "in": "path",
+            "name": "watchId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RenewWatchRequest"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "A list of calendars",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "items": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string"
-                          },
-                          "summary": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/Watch"
                 }
               }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
+            },
+            "description": "Successful response"
           }
-        }
+        },
+        "security": [
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive.file"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive.readonly"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/forms.body"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/forms.body.readonly"]
+          },
+          {
+            "Oauth2": [
+              "https://www.googleapis.com/auth/forms.responses.readonly"
+            ]
+          }
+        ],
+        "tags": ["forms"]
+      }
+    },
+    "/v1/forms/{formId}:batchUpdate": {
+      "post": {
+        "description": "Change the form with a batch of updates.",
+        "operationId": "batchUpdate",
+        "parameters": [
+          {
+            "name": "formId",
+            "description": "Required. The form ID.",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchUpdateFormRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchUpdateFormResponse"
+                }
+              }
+            },
+            "description": "Successful response"
+          }
+        },
+        "security": [
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/drive.file"]
+          },
+          {
+            "Oauth2": ["https://www.googleapis.com/auth/forms.body"]
+          }
+        ],
+        "tags": ["forms"]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Answer": {
+        "description": "The submitted answer for a question.",
+        "properties": {
+          "fileUploadAnswers": {
+            "$ref": "#/components/schemas/FileUploadAnswers",
+            "description": "Output only. The answers to a file upload question.",
+            "readOnly": true
+          },
+          "grade": {
+            "$ref": "#/components/schemas/Grade",
+            "description": "Output only. The grade for the answer if the form was a quiz.",
+            "readOnly": true
+          },
+          "questionId": {
+            "description": "Output only. The question's ID. See also Question.question_id.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "textAnswers": {
+            "$ref": "#/components/schemas/TextAnswers",
+            "description": "Output only. The specific answers as text.",
+            "readOnly": true
+          }
+        },
+        "type": "object"
+      },
+      "BatchUpdateFormRequest": {
+        "description": "A batch of updates to perform on a form. All the specified updates are made or none of them are.",
+        "properties": {
+          "includeFormInResponse": {
+            "description": "Whether to return an updated version of the model in the response.",
+            "type": "boolean"
+          },
+          "requests": {
+            "description": "Required. The update requests of this batch.",
+            "items": {
+              "$ref": "#/components/schemas/Request"
+            },
+            "type": "array"
+          },
+          "writeControl": {
+            "$ref": "#/components/schemas/WriteControl",
+            "description": "Provides control over how write requests are executed."
+          }
+        },
+        "type": "object"
+      },
+      "BatchUpdateFormResponse": {
+        "description": "Response to a BatchUpdateFormRequest.",
+        "properties": {
+          "form": {
+            "$ref": "#/components/schemas/Form",
+            "description": "Based on the bool request field `include_form_in_response`, a form with all applied mutations/updates is returned or not. This may be later than the revision ID created by these changes."
+          },
+          "replies": {
+            "description": "The reply of the updates. This maps 1:1 with the update requests, although replies to some requests may be empty.",
+            "items": {
+              "$ref": "#/components/schemas/Response"
+            },
+            "type": "array"
+          },
+          "writeControl": {
+            "$ref": "#/components/schemas/WriteControl",
+            "description": "The updated write control after applying the request."
+          }
+        },
+        "type": "object"
+      },
+      "ChoiceQuestion": {
+        "description": "A radio/checkbox/dropdown question.",
+        "properties": {
+          "options": {
+            "description": "Required. List of options that a respondent must choose from.",
+            "items": {
+              "$ref": "#/components/schemas/Option"
+            },
+            "type": "array"
+          },
+          "shuffle": {
+            "description": "Whether the options should be displayed in random order for different instances of the quiz. This is often used to prevent cheating by respondents who might be looking at another respondent's screen, or to address bias in a survey that might be introduced by always putting the same options first or last.",
+            "type": "boolean"
+          },
+          "type": {
+            "description": "Required. The type of choice question.",
+            "enum": ["RADIO", "CHECKBOX", "DROP_DOWN"],
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "CloudPubsubTopic": {
+        "description": "A Pub/Sub topic.",
+        "properties": {
+          "topicName": {
+            "description": "Required. A fully qualified Pub/Sub topic name to publish the events to. This topic must be owned by the calling project and already exist in Pub/Sub.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "CorrectAnswer": {
+        "description": "A single correct answer for a question. For multiple-valued (`CHECKBOX`) questions, several `CorrectAnswer`s may be needed to represent a single correct response option.",
+        "properties": {
+          "value": {
+            "description": "Required. The correct answer value. See the documentation for TextAnswer.value for details on how various value types are formatted.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "CorrectAnswers": {
+        "description": "The answer key for a question.",
+        "properties": {
+          "answers": {
+            "description": "A list of correct answers. A quiz response can be automatically graded based on these answers. For single-valued questions, a response is marked correct if it matches any value in this list (in other words, multiple correct answers are possible). For multiple-valued (`CHECKBOX`) questions, a response is marked correct if it contains exactly the values in this list.",
+            "items": {
+              "$ref": "#/components/schemas/CorrectAnswer"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "CreateItemRequest": {
+        "description": "Create an item in a form.",
+        "properties": {
+          "item": {
+            "$ref": "#/components/schemas/Item",
+            "description": "Required. The item to create."
+          },
+          "location": {
+            "$ref": "#/components/schemas/Location",
+            "description": "Required. Where to place the new item."
+          }
+        },
+        "type": "object"
+      },
+      "CreateItemResponse": {
+        "description": "The result of creating an item.",
+        "properties": {
+          "itemId": {
+            "description": "The ID of the created item.",
+            "type": "string"
+          },
+          "questionId": {
+            "description": "The ID of the question created as part of this item, for a question group it lists IDs of all the questions created for this item.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "CreateWatchRequest": {
+        "description": "Create a new watch.",
+        "properties": {
+          "watch": {
+            "$ref": "#/components/schemas/Watch",
+            "description": "Required. The watch object. No ID should be set on this object; use `watch_id` instead."
+          },
+          "watchId": {
+            "description": "The ID to use for the watch. If specified, the ID must not already be in use. If not specified, an ID is generated. This value should be 4-63 characters, and valid characters are /a-z-/.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "DateQuestion": {
+        "description": "A date question. Date questions default to just month + day.",
+        "properties": {
+          "includeTime": {
+            "description": "Whether to include the time as part of the question.",
+            "type": "boolean"
+          },
+          "includeYear": {
+            "description": "Whether to include the year as part of the question.",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "DeleteItemRequest": {
+        "description": "Delete an item in a form.",
+        "properties": {
+          "location": {
+            "$ref": "#/components/schemas/Location",
+            "description": "Required. The location of the item to delete."
+          }
+        },
+        "type": "object"
+      },
+      "Empty": {
+        "description": "A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); }",
+        "properties": {},
+        "type": "object"
+      },
+      "ExtraMaterial": {
+        "description": "Supplementary material to the feedback.",
+        "properties": {
+          "link": {
+            "$ref": "#/components/schemas/TextLink",
+            "description": "Text feedback."
+          },
+          "video": {
+            "$ref": "#/components/schemas/VideoLink",
+            "description": "Video feedback."
+          }
+        },
+        "type": "object"
+      },
+      "Feedback": {
+        "description": "Feedback for a respondent about their response to a question.",
+        "properties": {
+          "material": {
+            "description": "Additional information provided as part of the feedback, often used to point the respondent to more reading and resources.",
+            "items": {
+              "$ref": "#/components/schemas/ExtraMaterial"
+            },
+            "type": "array"
+          },
+          "text": {
+            "description": "Required. The main text of the feedback.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "FileUploadAnswer": {
+        "description": "Info for a single file submitted to a file upload question.",
+        "properties": {
+          "fileId": {
+            "description": "Output only. The ID of the Google Drive file.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "fileName": {
+            "description": "Output only. The file name, as stored in Google Drive on upload.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "mimeType": {
+            "description": "Output only. The MIME type of the file, as stored in Google Drive on upload.",
+            "readOnly": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "FileUploadAnswers": {
+        "description": "All submitted files for a FileUpload question.",
+        "properties": {
+          "answers": {
+            "description": "Output only. All submitted files for a FileUpload question.",
+            "items": {
+              "$ref": "#/components/schemas/FileUploadAnswer"
+            },
+            "readOnly": true,
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "FileUploadQuestion": {
+        "description": "A file upload question. The API currently does not support creating file upload questions.",
+        "properties": {
+          "folderId": {
+            "description": "Required. The ID of the Drive folder where uploaded files are stored.",
+            "type": "string"
+          },
+          "maxFileSize": {
+            "description": "Maximum number of bytes allowed for any single file uploaded to this question.",
+            "format": "int64",
+            "type": "string"
+          },
+          "maxFiles": {
+            "description": "Maximum number of files that can be uploaded for this question in a single response.",
+            "format": "int32",
+            "type": "integer"
+          },
+          "types": {
+            "description": "File types accepted by this question.",
+            "items": {
+              "enum": [
+                "FILE_TYPE_UNSPECIFIED",
+                "ANY",
+                "DOCUMENT",
+                "PRESENTATION",
+                "SPREADSHEET",
+                "DRAWING",
+                "PDF",
+                "IMAGE",
+                "VIDEO",
+                "AUDIO"
+              ],
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "Form": {
+        "description": "A Google Forms document. A form is created in Drive, and deleting a form or changing its access protections is done via the [Drive API].",
+        "properties": {
+          "formId": {
+            "description": "Output only. The form ID.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "info": {
+            "$ref": "#/components/schemas/Info",
+            "description": "Required. The title and description of the form."
+          },
+          "items": {
+            "description": "Required. A list of the form's items, which can include section headers, questions, embedded media, etc.",
+            "items": {
+              "$ref": "#/components/schemas/Item"
+            },
+            "type": "array"
+          },
+          "linkedSheetId": {
+            "description": "Output only. The ID of the linked Google Sheet which is accumulating responses from this Form (if such a Sheet exists).",
+            "readOnly": true,
+            "type": "string"
+          },
+          "responderUri": {
+            "description": "Output only. The form URI to share with responders. This opens a page that allows the user to submit responses but not edit the questions.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "revisionId": {
+            "description": "Output only. The revision ID of the form. Used in the WriteControl in update requests to identify the revision on which the changes are based. The format of the revision ID may change over time, so it should be treated opaquely. A returned revision ID is only guaranteed to be valid for 24 hours after it has been returned and cannot be shared across users. If the revision ID is unchanged between calls, then the form has not changed. Conversely, a changed ID (for the same form and user) usually means the form has been updated; however, a changed ID can also be due to internal factors such as ID format changes.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/FormSettings",
+            "description": "The form's settings. This must be updated with UpdateSettingsRequest; it is ignored during `forms.create` and UpdateFormInfoRequest."
+          }
+        },
+        "type": "object"
+      },
+      "FormResponse": {
+        "description": "A form response.",
+        "properties": {
+          "answers": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/Answer"
+            },
+            "description": "Output only. The actual answers to the questions, keyed by question_id.",
+            "readOnly": true,
+            "type": "object"
+          },
+          "createTime": {
+            "description": "Output only. Timestamp for the first time the response was submitted.",
+            "format": "google-datetime",
+            "readOnly": true,
+            "type": "string"
+          },
+          "formId": {
+            "description": "Output only. The form ID.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "lastSubmittedTime": {
+            "description": "Output only. Timestamp for the most recent time the response was submitted. Does not track changes to grades.",
+            "format": "google-datetime",
+            "readOnly": true,
+            "type": "string"
+          },
+          "respondentEmail": {
+            "description": "Output only. The email address (if collected) for the respondent.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "responseId": {
+            "description": "Output only. The response ID.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "totalScore": {
+            "description": "Output only. The total number of points the respondent received for their submission Only set if the form was a quiz and the response was graded. This includes points automatically awarded via autograding adjusted by any manual corrections entered by the form owner.",
+            "format": "double",
+            "readOnly": true,
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "FormSettings": {
+        "description": "A form's settings.",
+        "properties": {
+          "quizSettings": {
+            "$ref": "#/components/schemas/QuizSettings",
+            "description": "Settings related to quiz forms and grading."
+          }
+        },
+        "type": "object"
+      },
+      "Grade": {
+        "description": "Grade information associated with a respondent's answer to a question.",
+        "properties": {
+          "correct": {
+            "description": "Output only. Whether the question was answered correctly or not. A zero-point score is not enough to infer incorrectness, since a correctly answered question could be worth zero points.",
+            "readOnly": true,
+            "type": "boolean"
+          },
+          "feedback": {
+            "$ref": "#/components/schemas/Feedback",
+            "description": "Output only. Additional feedback given for an answer.",
+            "readOnly": true
+          },
+          "score": {
+            "description": "Output only. The numeric score awarded for the answer.",
+            "format": "double",
+            "readOnly": true,
+            "type": "number"
+          }
+        },
+        "type": "object"
+      },
+      "Grading": {
+        "description": "Grading for a single question",
+        "properties": {
+          "correctAnswers": {
+            "$ref": "#/components/schemas/CorrectAnswers",
+            "description": "Required. The answer key for the question. Responses are automatically graded based on this field."
+          },
+          "generalFeedback": {
+            "$ref": "#/components/schemas/Feedback",
+            "description": "The feedback displayed for all answers. This is commonly used for short answer questions when a quiz owner wants to quickly give respondents some sense of whether they answered the question correctly before they've had a chance to officially grade the response. General feedback cannot be set for automatically graded multiple choice questions."
+          },
+          "pointValue": {
+            "description": "Required. The maximum number of points a respondent can automatically get for a correct answer. This must not be negative.",
+            "format": "int32",
+            "type": "integer"
+          },
+          "whenRight": {
+            "$ref": "#/components/schemas/Feedback",
+            "description": "The feedback displayed for correct responses. This feedback can only be set for multiple choice questions that have correct answers provided."
+          },
+          "whenWrong": {
+            "$ref": "#/components/schemas/Feedback",
+            "description": "The feedback displayed for incorrect responses. This feedback can only be set for multiple choice questions that have correct answers provided."
+          }
+        },
+        "type": "object"
+      },
+      "Grid": {
+        "description": "A grid of choices (radio or check boxes) with each row constituting a separate question. Each row has the same choices, which are shown as the columns.",
+        "properties": {
+          "columns": {
+            "$ref": "#/components/schemas/ChoiceQuestion",
+            "description": "Required. The choices shared by each question in the grid. In other words, the values of the columns. Only `CHECK_BOX` and `RADIO` choices are allowed."
+          },
+          "shuffleQuestions": {
+            "description": "If `true`, the questions are randomly ordered. In other words, the rows appear in a different order for every respondent.",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "Image": {
+        "description": "Data representing an image.",
+        "properties": {
+          "altText": {
+            "description": "A description of the image that is shown on hover and read by screenreaders.",
+            "type": "string"
+          },
+          "contentUri": {
+            "description": "Output only. A URI from which you can download the image; this is valid only for a limited time.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "properties": {
+            "$ref": "#/components/schemas/MediaProperties",
+            "description": "Properties of an image."
+          },
+          "sourceUri": {
+            "description": "Input only. The source URI is the URI used to insert the image. The source URI can be empty when fetched.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ImageItem": {
+        "description": "An item containing an image.",
+        "properties": {
+          "image": {
+            "$ref": "#/components/schemas/Image",
+            "description": "Required. The image displayed in the item."
+          }
+        },
+        "type": "object"
+      },
+      "Info": {
+        "description": "The general information for a form.",
+        "properties": {
+          "documentTitle": {
+            "description": "Output only. The title of the document which is visible in Drive. If `Info.title` is empty, `document_title` may appear in its place in the Google Forms UI and be visible to responders. `document_title` can be set on create, but cannot be modified by a batchUpdate request. Please use the [Google Drive API](https://developers.google.com/drive/api/v3/reference/files/update) if you need to programmatically update `document_title`.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "title": {
+            "description": "Required. The title of the form which is visible to responders.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Item": {
+        "description": "A single item of the form. `kind` defines which kind of item it is. An item can only be defined by one itemId, one description and, most importantly, one item kind.",
+        "properties": {
+          "itemId": {
+            "description": "The item ID. On creation, it can be provided but the ID must not be already used in the form. If not provided, a new ID is assigned.",
+            "type": "string"
+          },
+          "description": {
+            "description": "The description of the item.",
+            "type": "string"
+          },
+          "pageBreakItem": {
+            "$ref": "#/components/schemas/PageBreakItem",
+            "description": "Starts a new page with a title."
+          },
+          "questionGroupItem": {
+            "$ref": "#/components/schemas/QuestionGroupItem",
+            "description": "Poses one or more questions to the user with a single major prompt."
+          },
+          "questionItem": {
+            "$ref": "#/components/schemas/QuestionItem",
+            "description": "Poses a question to the user."
+          },
+          "title": {
+            "description": "The title of the item.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ListFormResponsesResponse": {
+        "description": "Response to a ListFormResponsesRequest.",
+        "properties": {
+          "nextPageToken": {
+            "description": "If set, there are more responses. To get the next page of responses, provide this as `page_token` in a future request.",
+            "type": "string"
+          },
+          "responses": {
+            "description": "The returned form responses. Note: The `formId` field is not returned in the `FormResponse` object for list requests.",
+            "items": {
+              "$ref": "#/components/schemas/FormResponse"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "ListWatchesResponse": {
+        "description": "The response of a ListWatchesRequest.",
+        "properties": {
+          "watches": {
+            "description": "The returned watches.",
+            "items": {
+              "$ref": "#/components/schemas/Watch"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "Location": {
+        "description": "A specific location in a form.",
+        "properties": {
+          "index": {
+            "description": "The index of an item in the form. This must be in the range [0..*N*), where *N* is the number of items in the form.",
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "MediaProperties": {
+        "description": "Properties of the media.",
+        "properties": {
+          "alignment": {
+            "description": "Position of the media.",
+            "enum": ["ALIGNMENT_UNSPECIFIED", "LEFT", "RIGHT", "CENTER"],
+            "type": "string"
+          },
+          "width": {
+            "description": "The width of the media in pixels. When the media is displayed, it is scaled to the smaller of this value or the width of the displayed form. The original aspect ratio of the media is preserved. If a width is not specified when the media is added to the form, it is set to the width of the media source. Width must be between 0 and 740, inclusive. Setting width to 0 or unspecified is only permitted when updating the media source.",
+            "format": "int32",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "MoveItemRequest": {
+        "description": "Move an item in a form.",
+        "properties": {
+          "newLocation": {
+            "$ref": "#/components/schemas/Location",
+            "description": "Required. The new location for the item."
+          },
+          "originalLocation": {
+            "$ref": "#/components/schemas/Location",
+            "description": "Required. The location of the item to move."
+          }
+        },
+        "type": "object"
+      },
+      "Option": {
+        "description": "An option for a Choice question.",
+        "properties": {
+          "goToAction": {
+            "description": "Section navigation type.",
+            "enum": [
+              "GO_TO_ACTION_UNSPECIFIED",
+              "NEXT_SECTION",
+              "RESTART_FORM",
+              "SUBMIT_FORM"
+            ],
+            "type": "string"
+          },
+          "goToSectionId": {
+            "description": "Item ID of section header to go to.",
+            "type": "string"
+          },
+          "isOther": {
+            "description": "Whether the option is \"other\". Currently only applies to `RADIO` and `CHECKBOX` choice types, but is not allowed in a QuestionGroupItem.",
+            "type": "boolean"
+          },
+          "value": {
+            "description": "Required. The choice as presented to the user.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "PageBreakItem": {
+        "description": "A page break. The title and description of this item are shown at the top of the new page.",
+        "properties": {},
+        "type": "object"
+      },
+      "Question": {
+        "description": "Any question. The specific type of question is known by its `kind`.",
+        "properties": {
+          "required": {
+            "description": "Whether the question must be answered in order for a respondent to submit their response.",
+            "type": "boolean"
+          },
+          "choiceQuestion": {
+            "$ref": "#/components/schemas/ChoiceQuestion",
+            "description": "A respondent can choose from a pre-defined set of options."
+          },
+          "dateQuestion": {
+            "$ref": "#/components/schemas/DateQuestion",
+            "description": "A respondent can enter a date."
+          },
+          "fileUploadQuestion": {
+            "$ref": "#/components/schemas/FileUploadQuestion",
+            "description": "A respondent can upload one or more files."
+          },
+          "grading": {
+            "$ref": "#/components/schemas/Grading",
+            "description": "Grading setup for the question."
+          },
+          "questionId": {
+            "description": "Read only. The question ID. On creation, it can be provided but the ID must not be already used in the form. If not provided, a new ID is assigned.",
+            "type": "string"
+          },
+          "rowQuestion": {
+            "$ref": "#/components/schemas/RowQuestion",
+            "description": "A row of a QuestionGroupItem."
+          },
+          "scaleQuestion": {
+            "$ref": "#/components/schemas/ScaleQuestion",
+            "description": "A respondent can choose a number from a range."
+          },
+          "textQuestion": {
+            "$ref": "#/components/schemas/TextQuestion",
+            "description": "A respondent can enter a free text response."
+          },
+          "timeQuestion": {
+            "$ref": "#/components/schemas/TimeQuestion",
+            "description": "A respondent can enter a time."
+          }
+        },
+        "type": "object"
+      },
+      "QuestionGroupItem": {
+        "description": "Defines a question that comprises multiple questions grouped together.",
+        "properties": {
+          "grid": {
+            "$ref": "#/components/schemas/Grid",
+            "description": "The question group is a grid with rows of multiple choice questions that share the same options. When `grid` is set, all questions in the group must be of kind `row`."
+          },
+          "image": {
+            "$ref": "#/components/schemas/Image",
+            "description": "The image displayed within the question group above the specific questions."
+          },
+          "questions": {
+            "description": "Required. A list of questions that belong in this question group. A question must only belong to one group. The `kind` of the group may affect what types of questions are allowed.",
+            "items": {
+              "$ref": "#/components/schemas/Question"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "QuestionItem": {
+        "description": "A form item containing a single question.",
+        "properties": {
+          "question": {
+            "$ref": "#/components/schemas/Question",
+            "description": "Required. The displayed question."
+          }
+        },
+        "type": "object"
+      },
+      "QuizSettings": {
+        "description": "Settings related to quiz forms and grading. These must be updated with the UpdateSettingsRequest.",
+        "properties": {
+          "isQuiz": {
+            "description": "Whether this form is a quiz or not. When true, responses are graded based on question Grading. Upon setting to false, all question Grading is deleted.",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "RenewWatchRequest": {
+        "description": "Renew an existing Watch for seven days.",
+        "properties": {},
+        "type": "object"
+      },
+      "Request": {
+        "description": "The kinds of update requests that can be made. A request can only be one of the types in Request.properties",
+        "properties": {
+          "createItem": {
+            "$ref": "#/components/schemas/CreateItemRequest",
+            "description": "Create a new item."
+          },
+          "deleteItem": {
+            "$ref": "#/components/schemas/DeleteItemRequest",
+            "description": "Delete an item."
+          },
+          "moveItem": {
+            "$ref": "#/components/schemas/MoveItemRequest",
+            "description": "Move an item to a specified location."
+          },
+          "updateFormInfo": {
+            "$ref": "#/components/schemas/UpdateFormInfoRequest",
+            "description": "Update Form's Info."
+          },
+          "updateItem": {
+            "$ref": "#/components/schemas/UpdateItemRequest",
+            "description": "Update an item."
+          },
+          "updateSettings": {
+            "$ref": "#/components/schemas/UpdateSettingsRequest",
+            "description": "Updates the Form's settings."
+          }
+        },
+        "type": "object"
+      },
+      "Response": {
+        "description": "A single response from an update.",
+        "properties": {
+          "createItem": {
+            "$ref": "#/components/schemas/CreateItemResponse",
+            "description": "The result of creating an item."
+          }
+        },
+        "type": "object"
+      },
+      "RowQuestion": {
+        "description": "Configuration for a question that is part of a question group.",
+        "properties": {
+          "title": {
+            "description": "Required. The title for the single row in the QuestionGroupItem.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "ScaleQuestion": {
+        "description": "A scale question. The user has a range of numeric values to choose from.",
+        "properties": {
+          "high": {
+            "description": "Required. The highest possible value for the scale.",
+            "format": "int32",
+            "type": "integer"
+          },
+          "highLabel": {
+            "description": "The label to display describing the highest point on the scale.",
+            "type": "string"
+          },
+          "low": {
+            "description": "Required. The lowest possible value for the scale.",
+            "format": "int32",
+            "type": "integer"
+          },
+          "lowLabel": {
+            "description": "The label to display describing the lowest point on the scale.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "TextAnswer": {
+        "description": "An answer to a question represented as text.",
+        "properties": {
+          "value": {
+            "description": "Output only. The answer value. Formatting used for different kinds of question: * ChoiceQuestion * `RADIO` or `DROP_DOWN`: A single string corresponding to the option that was selected. * `CHECKBOX`: Multiple strings corresponding to each option that was selected. * TextQuestion: The text that the user entered. * ScaleQuestion: A string containing the number that was selected. * DateQuestion * Without time or year: MM-DD e.g. \"05-19\" * With year: YYYY-MM-DD e.g. \"1986-05-19\" * With time: MM-DD HH:MM e.g. \"05-19 14:51\" * With year and time: YYYY-MM-DD HH:MM e.g. \"1986-05-19 14:51\" * TimeQuestion: String with time or duration in HH:MM format e.g. \"14:51\" * RowQuestion within QuestionGroupItem: The answer for each row of a QuestionGroupItem is represented as a separate Answer. Each will contain one string for `RADIO`-type choices or multiple strings for `CHECKBOX` choices.",
+            "readOnly": true,
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "TextAnswers": {
+        "description": "A question's answers as text.",
+        "properties": {
+          "answers": {
+            "description": "Output only. Answers to a question. For multiple-value ChoiceQuestions, each answer is a separate value.",
+            "items": {
+              "$ref": "#/components/schemas/TextAnswer"
+            },
+            "readOnly": true,
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "TextItem": {
+        "description": "A text item.",
+        "properties": {},
+        "type": "object"
+      },
+      "TextLink": {
+        "description": "Link for text.",
+        "properties": {
+          "displayText": {
+            "description": "Required. Display text for the URI.",
+            "type": "string"
+          },
+          "uri": {
+            "description": "Required. The URI.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "TextQuestion": {
+        "description": "A text-based question.",
+        "properties": {
+          "paragraph": {
+            "description": "Whether the question is a paragraph question or not. If not, the question is a short text question.",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "TimeQuestion": {
+        "description": "A time question.",
+        "properties": {
+          "duration": {
+            "description": "`true` if the question is about an elapsed time. Otherwise it is about a time of day.",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateFormInfoRequest": {
+        "description": "Update Form's Info.",
+        "properties": {
+          "info": {
+            "$ref": "#/components/schemas/Info",
+            "description": "The info to update."
+          },
+          "updateMask": {
+            "description": "Required. Only values named in this mask are changed. At least one field must be specified. The root `info` is implied and should not be specified. A single `\"*\"` can be used as short-hand for updating every field.",
+            "format": "google-fieldmask",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateItemRequest": {
+        "description": "Update an item in a form.",
+        "properties": {
+          "item": {
+            "$ref": "#/components/schemas/Item",
+            "description": "Required. New values for the item. Note that item and question IDs are used if they are provided (and are in the field mask). If an ID is blank (and in the field mask) a new ID is generated. This means you can modify an item by getting the form via forms.get, modifying your local copy of that item to be how you want it, and using UpdateItemRequest to write it back, with the IDs being the same (or not in the field mask)."
+          },
+          "location": {
+            "$ref": "#/components/schemas/Location",
+            "description": "Required. The location identifying the item to update."
+          },
+          "updateMask": {
+            "description": "Required. Only values named in this mask are changed.",
+            "format": "google-fieldmask",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateSettingsRequest": {
+        "description": "Update Form's FormSettings.",
+        "properties": {
+          "settings": {
+            "$ref": "#/components/schemas/FormSettings",
+            "description": "Required. The settings to update with."
+          },
+          "updateMask": {
+            "description": "Required. Only values named in this mask are changed. At least one field must be specified. The root `settings` is implied and should not be specified. A single `\"*\"` can be used as short-hand for updating every field.",
+            "format": "google-fieldmask",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Video": {
+        "description": "Data representing a video.",
+        "properties": {
+          "properties": {
+            "$ref": "#/components/schemas/MediaProperties",
+            "description": "Properties of a video."
+          },
+          "youtubeUri": {
+            "description": "Required. A YouTube URI.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "VideoItem": {
+        "description": "An item containing a video.",
+        "properties": {
+          "caption": {
+            "description": "The text displayed below the video.",
+            "type": "string"
+          },
+          "video": {
+            "$ref": "#/components/schemas/Video",
+            "description": "Required. The video displayed in the item."
+          }
+        },
+        "type": "object"
+      },
+      "VideoLink": {
+        "description": "Link to a video.",
+        "properties": {
+          "displayText": {
+            "description": "Required. The display text for the link.",
+            "type": "string"
+          },
+          "youtubeUri": {
+            "description": "The URI of a YouTube video.",
+            "type": "string"
+          }
+        },
+        "type": "object"
+      },
+      "Watch": {
+        "description": "A watch for events for a form. When the designated event happens, a notification will be published to the specified target. The notification's attributes will include a `formId` key that has the ID of the watched form and an `eventType` key that has the string of the type. Messages are sent with at-least-once delivery and are only dropped in extraordinary circumstances. Typically all notifications should be reliably delivered within a few seconds; however, in some situations notifications may be delayed. A watch expires seven days after it is created unless it is renewed with watches.renew",
+        "properties": {
+          "createTime": {
+            "description": "Output only. Timestamp of when this was created.",
+            "format": "google-datetime",
+            "readOnly": true,
+            "type": "string"
+          },
+          "errorType": {
+            "description": "Output only. The most recent error type for an attempted delivery. To begin watching the form again a call can be made to watches.renew which also clears this error information.",
+            "enum": [
+              "ERROR_TYPE_UNSPECIFIED",
+              "PROJECT_NOT_AUTHORIZED",
+              "NO_USER_ACCESS",
+              "OTHER_ERRORS"
+            ],
+            "readOnly": true,
+            "type": "string"
+          },
+          "eventType": {
+            "description": "Required. Which event type to watch for.",
+            "enum": ["EVENT_TYPE_UNSPECIFIED", "SCHEMA", "RESPONSES"],
+            "type": "string"
+          },
+          "expireTime": {
+            "description": "Output only. Timestamp for when this will expire. Each watches.renew call resets this to seven days in the future.",
+            "format": "google-datetime",
+            "readOnly": true,
+            "type": "string"
+          },
+          "id": {
+            "description": "Output only. The ID of this watch. See notes on CreateWatchRequest.watch_id.",
+            "readOnly": true,
+            "type": "string"
+          },
+          "state": {
+            "description": "Output only. The current state of the watch. Additional details about suspended watches can be found by checking the `error_type`.",
+            "enum": ["STATE_UNSPECIFIED", "ACTIVE", "SUSPENDED"],
+            "readOnly": true,
+            "type": "string"
+          },
+          "target": {
+            "$ref": "#/components/schemas/WatchTarget",
+            "description": "Required. Where to send the notification."
+          }
+        },
+        "type": "object"
+      },
+      "WatchTarget": {
+        "description": "The target for notification delivery.",
+        "properties": {
+          "topic": {
+            "$ref": "#/components/schemas/CloudPubsubTopic",
+            "description": "A Pub/Sub topic. To receive notifications, the topic must grant publish privileges to the Forms service account `serviceAccount:forms-notifications@system.gserviceaccount.com`. Only the project that owns a topic may create a watch with it. Pub/Sub delivery guarantees should be considered."
+          }
+        },
+        "type": "object"
+      },
+      "WriteControl": {
+        "description": "Provides control over how write requests are executed.",
+        "properties": {
+          "requiredRevisionId": {
+            "description": "The revision ID of the form that the write request is applied to. If this is not the latest revision of the form, the request is not processed and returns a 400 bad request error.",
+            "type": "string"
+          },
+          "targetRevisionId": {
+            "description": "The target revision ID of the form that the write request is applied to. If changes have occurred after this revision, the changes in this update request are transformed against those changes. This results in a new revision of the form that incorporates both the changes in the request and the intervening changes, with the server resolving conflicting changes. The target revision ID may only be used to write to recent versions of a form. If the target revision is too far behind the latest revision, the request is not processed and returns a 400 (Bad Request Error). The request may be retried after reading the latest version of the form. In most cases a target revision ID remains valid for several minutes after it is read, but for frequently-edited forms this window may be shorter.",
+            "type": "string"
+          }
+        },
+        "type": "object"
       }
     }
   }
