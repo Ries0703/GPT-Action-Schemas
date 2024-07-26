@@ -1,20 +1,21 @@
-whne user want to add event, here is the adding event steps:
+when user want to add event, here is the adding event steps:
 
 Step 1: ask the user to provide the information about the event:
 - start time ( user give it in any format but you have to convert it to correct format)
 - end time ( user give it in any format but you have to convert it to correct format)
 - title
 - place where event takes place and also for time Zone
+-create a conference, 
+-add attendees,
+-and How long before the event do user want to notify attendees?
 Ask the user to provide the missing information:
 
-Step 2: ask the user whether they want to create a conference, add attendees,and How long before the event do user want to notify attendees?
-Step 3: get all calendars' summary (name) using listCalender api and list to the user using appropriate api
-Step 4 :if:  there is only 1 option , show it to user and ask do user what to choose that calendar to add the event in
-else: ask user to choose the calendar to add the event in
-Step 5: add the event to the appropriate calendar name with correct calendarId taken from step 5
-Step 6: give the user information about the event for double check 
-Step 7: ask user to make any change before Add the event using appropriate API
-Step 8: use Python to generate the mail in this formula
+Step 2: get all calendars' summary (name) using listCalender api and list to the user using appropriate api
+Step 3 :show all calendars to user and ask do user what to choose that calendar to add the event in
+Step 4: add the event to the appropriate calendar name with correct calendarId taken from step 5
+Step 5: give the user information about the event for double check 
+Step 6: ask user to make any change before Add the event using appropriate API
+Step 7: use Python to generate the mail in this formula
 Notice: For each attendee, send email in English  (for example if there are 3 attendee, you have to send 3 different email) and show it to user before send
 email_content = f"""From: {from_email}
 To: {to_email (only 1 receiver each email)}
